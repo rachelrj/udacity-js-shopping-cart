@@ -39,6 +39,24 @@ const products = [
    - strawberry.jpg by Allec Gomes
 */
 
+// Helper functions for finding products/cart items
+const findProduct = (productId) => {
+  let foundProduct = -1;
+  products.forEach(product => {
+    if (product.productId === productId) {
+      foundProduct = product;
+    }
+  });
+  return foundProduct;
+}
+
+const findProductInCart = (productId) => {
+  if (cart.filter(item => item.productId === productId).length === 0) {
+    return false;
+  }
+  return true;
+}
+
 /* Declare an empty array named cart to hold the items in the cart */
 
 const cart = [];
@@ -50,15 +68,12 @@ const cart = [];
 */
 
 const addProductToCart = (productId) => {
-  products.forEach(product => {
-    if (product.productId === productId) {
-      product.quantity++;
-      if (cart.filter(item => item.productId === productId).length === 0) {
-        cart.push(product);
-      }
-      return product;
+  const product = increaseQuantity(productId);
+  if (product !== -1) {
+    if (!findProductInCart(productId)) {
+      cart.push(product);
     }
-  })
+  }
 }
 
 /* Create a function named increaseQuantity that takes in the productId as an argument
@@ -67,7 +82,11 @@ const addProductToCart = (productId) => {
 */
 
 const increaseQuantity = (productId) => {
-  addProductToCart(productId);
+  const product = findProduct(productId);
+  if (product !== -1) {
+    product.quantity++;
+  }
+  return product;
 }
 
 
@@ -78,18 +97,14 @@ const increaseQuantity = (productId) => {
 */
 
 const decreaseQuantity = (productId) => {
-  products.forEach(product => {
-    if (product.productId === productId) {
-      product.quantity--;
-      if(product.quantity === 0) {
-        for (let i = 0; i < cart.length; i++) {
-          if (parseInt(cart[i].productId) === parseInt(productId)) {
-            cart.splice(i, 1);
-          }
-        }
-      }
-    }
-  })
+  const product = findProduct(productId);
+  if (product !== -1) {
+    product.quantity--;
+  }
+  if (product.quantity === 0) {
+    removeProductFromCart(productId);
+  }
+  return product;
 }
 
 /* Create a function named removeProductFromCart that takes in the productId as an argument
@@ -99,16 +114,13 @@ const decreaseQuantity = (productId) => {
 */
 
 const removeProductFromCart = (productId) => {
-  products.forEach(product => {
-    if (product.productId === productId) {
-      product.quantity = 0;
-      for (let i = 0; i < cart.length; i++) {
-        if (parseInt(cart[i].productId) === parseInt(productId)) {
-          cart.splice(i, 1);
-        }
-      }
+  const product = findProduct(productId);
+  product.quantity = 0;
+  for (let i = 0; i < cart.length; i++) {
+    if (cart[i].productId === productId) {
+      cart.splice(i, 1);
     }
-  });
+  }
 }
 
 /* Create a function named cartTotal that has no parameters
@@ -137,9 +149,17 @@ const emptyCart = () => {
   - pay will return a positive number if money should be returned to customer
 */
 
+let totalPaid = 0;
+
 const pay = (amount) => {
   const total = cartTotal();
-  return amount - total;
+  totalPaid = totalPaid + amount;
+  const returnedOrOwed = totalPaid - total;
+  // Cash is returned so remove returned from total paid
+  if (returnedOrOwed > 0) {
+    totalPaid = totalPaid - returnedOrOwed;
+  }
+  return returnedOrOwed;
 }
 
 /* Place stand out suggestions here (stand out suggestions can be found at the bottom of the project rubric.)*/
