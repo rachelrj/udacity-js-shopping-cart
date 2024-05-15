@@ -92,9 +92,9 @@ const increaseQuantity = (productId) => {
 
 /* Create a function named decreaseQuantity that takes in the productId as an argument
   - decreaseQuantity should get the correct product based on the productId
-  - decreaseQuantity should decrease the quantity of the product
-  - if the function decreases the quantity to 0, the product is removed from the cart
-*/
+//   - decreaseQuantity should decrease the quantity of the product
+//   - if the function decreases the quantity to 0, the product is removed from the cart
+// */
 
 const decreaseQuantity = (productId) => {
   const product = findProduct(productId);
