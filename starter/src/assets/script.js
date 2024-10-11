@@ -12,26 +12,26 @@
 const products = [
   {
     name: "Cherry",
-    price: .5,
+    price: 0.5,
     quantity: 0,
     productId: 1,
-    image: "./images/cherry.jpg"
-  },  
+    image: "./images/cherry.jpg",
+  },
   {
     name: "Orange",
     price: 1,
     quantity: 0,
     productId: 2,
-    image: "./images/orange.jpg"
-  },  
+    image: "./images/orange.jpg",
+  },
   {
     name: "Strawberry",
-    price: .75,
+    price: 0.75,
     quantity: 0,
     productId: 3,
-    image: "./images/strawberry.jpg"
-  }
-]
+    image: "./images/strawberry.jpg",
+  },
+];
 
 /* Images provided in /images folder. All images from Unsplash.com
    - cherry.jpg by Mae Mu
@@ -40,22 +40,22 @@ const products = [
 */
 
 // Helper functions for finding products/cart items
-const findProduct = (productId) => {
+const findProduct = (pId) => {
   let foundProduct = -1;
-  products.forEach(product => {
-    if (product.productId === productId) {
+  products.forEach((product) => {
+    if (product.productId === pId) {
       foundProduct = product;
     }
   });
   return foundProduct;
-}
+};
 
 const findProductInCart = (productId) => {
-  if (cart.filter(item => item.productId === productId).length === 0) {
+  if (cart.filter((item) => item.productId === productId).length === 0) {
     return false;
   }
   return true;
-}
+};
 
 /* Declare an empty array named cart to hold the items in the cart */
 
@@ -69,12 +69,12 @@ const cart = [];
 
 const addProductToCart = (productId) => {
   const product = increaseQuantity(productId);
-  if (product !== -1) {
+  if (product) {
     if (!findProductInCart(productId)) {
       cart.push(product);
     }
   }
-}
+};
 
 /* Create a function named increaseQuantity that takes in the productId as an argument
   - increaseQuantity should get the correct product based on the productId
@@ -83,12 +83,11 @@ const addProductToCart = (productId) => {
 
 const increaseQuantity = (productId) => {
   const product = findProduct(productId);
-  if (product !== -1) {
+  if (product) {
     product.quantity++;
   }
   return product;
-}
-
+};
 
 /* Create a function named decreaseQuantity that takes in the productId as an argument
   - decreaseQuantity should get the correct product based on the productId
@@ -98,14 +97,14 @@ const increaseQuantity = (productId) => {
 
 const decreaseQuantity = (productId) => {
   const product = findProduct(productId);
-  if (product !== -1) {
+  if (product) {
     product.quantity--;
   }
   if (product.quantity === 0) {
     removeProductFromCart(productId);
   }
   return product;
-}
+};
 
 /* Create a function named removeProductFromCart that takes in the productId as an argument
   - removeProductFromCart should get the correct product based on the productId
@@ -121,7 +120,7 @@ const removeProductFromCart = (productId) => {
       cart.splice(i, 1);
     }
   }
-}
+};
 
 /* Create a function named cartTotal that has no parameters
   - cartTotal should iterate through the cart to get the total of all products
@@ -130,19 +129,19 @@ const removeProductFromCart = (productId) => {
 
 const cartTotal = () => {
   let total = 0;
-  cart.forEach(product => {
-    total = total + (product.quantity * product.price);
-  })
+  cart.forEach((product) => {
+    total = total + product.quantity * product.price;
+  });
   return total;
-}
+};
 
 /* Create a function called emptyCart that empties the products from the cart */
 
 const emptyCart = () => {
-  products.forEach(product => {
-    removeProductFromCart(product.productId)
+  products.forEach((product) => {
+    removeProductFromCart(product.productId);
   });
-}
+};
 
 /* Create a function named pay that takes in an amount as an argument
   - pay will return a negative number if there is a remaining balance
@@ -154,16 +153,15 @@ let totalPaid = 0;
 const pay = (amount) => {
   const total = cartTotal();
   totalPaid = totalPaid + amount;
-  const returnedOrOwed = totalPaid - total;
+  const remaining = totalPaid - total;
   // Cash is returned so remove returned from total paid
-  if (returnedOrOwed > 0) {
-    totalPaid = totalPaid - returnedOrOwed;
+  if (remaining > 0) {
+    totalPaid = totalPaid - remaining;
   }
-  return returnedOrOwed;
-}
+  return remaining;
+};
 
 /* Place stand out suggestions here (stand out suggestions can be found at the bottom of the project rubric.)*/
-
 
 /* The following is for running unit tests. 
    To fully complete this project, it is expected that all tests pass.
@@ -172,15 +170,15 @@ const pay = (amount) => {
 */
 
 module.exports = {
-   products,
-   cart,
-   addProductToCart,
-   increaseQuantity,
-   decreaseQuantity,
-   removeProductFromCart,
-   cartTotal,
-   pay, 
-   emptyCart,
-   /* Uncomment the following line if completing the currency converter bonus */
-   // currency
-}
+  products,
+  cart,
+  addProductToCart,
+  increaseQuantity,
+  decreaseQuantity,
+  removeProductFromCart,
+  cartTotal,
+  pay,
+  emptyCart,
+  /* Uncomment the following line if completing the currency converter bonus */
+  // currency
+};
